@@ -1,5 +1,7 @@
 package com.demo.resource;
 
+import java.io.BufferedReader;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -15,11 +17,19 @@ public class OkkerResource {
 
     @RequestMapping(value = "/webhook", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<Void> webhook(HttpServletRequest request) {
-        log(request.getRemoteAddr());
+        String line = null;
+        StringBuffer body = new StringBuffer();
+        try {
+            BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null)
+                body.append(line);
+        } catch (Exception e) {
+            /*report an error*/ }
+        log(request.getRemoteAddr(), body.toString());
         return ResponseEntity.ok().build();
     }
 
-    private void log(String remoteAddr) {
-        LOGGER.info("Visit from '{}'.", remoteAddr);
+    private void log(String remoteAddr, String request) {
+        LOGGER.info("Visit from '{}', request: '{}'.", remoteAddr, request);
     }
 }
