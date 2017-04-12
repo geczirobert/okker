@@ -16,7 +16,7 @@ public class OkkerResource {
     private static final Logger LOGGER = LoggerFactory.getLogger(OkkerResource.class);
 
     @RequestMapping(value = "/webhook", method = {RequestMethod.GET, RequestMethod.POST})
-    public ResponseEntity<Void> webhook(HttpServletRequest request) {
+    public ResponseEntity<ChatResponse> webhook(HttpServletRequest request) {
         String line = null;
         StringBuffer body = new StringBuffer();
         try {
@@ -26,7 +26,7 @@ public class OkkerResource {
         } catch (Exception e) {
             /*report an error*/ }
         log(request.getRemoteAddr(), body.toString());
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(new ChatResponse());
     }
 
     private void log(String remoteAddr, String request) {
